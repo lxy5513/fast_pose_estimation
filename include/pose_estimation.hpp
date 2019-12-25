@@ -8,13 +8,12 @@
 
 
 using namespace caffe;  // NOLINT(build/namespaces)
-
-typedef std::vector<caffe::Blob<float>*> PoseOutput;
+typedef std::vector<caffe::Blob<float>*> ModelOutput;
 
 namespace human_pose_estimation {
 class PoseEstimator{
     private:
-        std::vector<HumanPose> Predict(const cv::Mat& img);
+        ModelOutput Predict(const cv::Mat& img);
         void WrapInputLayer(std::vector<cv::Mat>* input_channels);
         void Preprocess(const cv::Mat& img, std::vector<cv::Mat>* input_channels);
         void resizeFeatureMaps(std::vector<cv::Mat>& featureMaps) const;
@@ -23,14 +22,13 @@ class PoseEstimator{
                                 const cv::Size& imageSize) const;
         std::vector<HumanPose> extractPoses(const std::vector<cv::Mat>& heatMaps,
                                         const std::vector<cv::Mat>& pafs) const;
+        std::vector<HumanPose> Postprocess(ModelOutput model_result, const cv::Mat& img);
+
 
 
         shared_ptr<Net<float> > net_;
         int num_channels_;
         cv::Size input_geometry_;
-
-
-
         int minJointsNumber;
         int stride;
         cv::Vec4i pad;
@@ -41,11 +39,6 @@ class PoseEstimator{
         float minSubsetScore;
         cv::Size inputLayerSize;
         int upsampleRatio;
-
-
-
-
-
 
         
     public:
