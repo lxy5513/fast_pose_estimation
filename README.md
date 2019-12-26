@@ -12,6 +12,9 @@ Achieve relative code about caffe pose estimation model by c++
     - image display 
     - video display
 
+## demo 
+ <p align="center"><img src="src/output.gif" width="70%" alt="" /></p>
+
 
 ## make 
 cd build  

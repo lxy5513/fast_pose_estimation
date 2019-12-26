@@ -57,6 +57,9 @@ void video_demo(PoseEstimator pose_estimator, map<string, string> params){
             throw std::logic_error("Failed to get frame from cv::VideoCapture");
         }
 
+        int frame_width=256; 
+        int frame_height=192;
+        cv::VideoWriter videoSave("outcpp.avi",CV_FOURCC('M','J','P','G'),20, cv::Size(640,360));
         do {
             double t1 = static_cast<double>(cv::getTickCount());
             std::vector<HumanPose> poses = pose_estimator.poseEstimation(image);
@@ -79,6 +82,7 @@ void video_demo(PoseEstimator pose_estimator, map<string, string> params){
             cv::putText(image, fpsSs.str(), cv::Point(16, 32),
                         cv::FONT_HERSHEY_COMPLEX, 0.8, cv::Scalar(0, 0, 255));
             cv::imshow("ICV Human Pose Estimation", image);
+            videoSave.write(image);
             // cv::imwrite("saved.jpg", image);
 
             int key = cv::waitKey(delay) & 255;
