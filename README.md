@@ -14,10 +14,10 @@ Achieve relative code about caffe pose estimation model by c++
 
 
 ## make 
-cd build
-cmake -DCMAKE_BUILD_TYPE=Debug  ..  
+cd build  
+cmake -DCMAKE_BUILD_TYPE=Debug  ..    
 make  
-./pose_estimation model_file.prototxt trained_model.caffemodel /path/to/img.png 
+./pose_estimation model_file.prototxt trained_model.caffemodel /path/to/img.png   
 
 
 ## speed 
@@ -29,4 +29,7 @@ make
 Caffe_DIR="/ssd2/xyliu/projects/caffe/build/install/share/Caffe"
 
 ## user mode 
-export LD_LIBRARY_PATH="/ssd2/xyliu/projects/caffe/build/install/lib/":$LD_LIBRARY_PATH
+export LD_LIBRARY_PATH="/ssd2/xyliu/projects/caffe/build/install/lib/":$LD_LIBRARY_PATH 
+
+## doc 
+doc/caffe_depthconv.md
