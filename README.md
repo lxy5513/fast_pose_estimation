@@ -10,15 +10,23 @@ Achieve relative code about caffe pose estimation model by c++
         - postprecess 
     - pose render  
     - image display 
+    - video display
 
 
-## install
+## make 
+cd build
+cmake -DCMAKE_BUILD_TYPE=Debug  ..  
+make  
+./pose_estimation model_file.prototxt trained_model.caffemodel /path/to/img.png 
 
-## Speed 
 
-## Accuracy 
+## speed 
+- model inference time: 10ms 
+- total time: 18ms(include preprocess and postprecess)
 
-## model download
+
+## caffe(with depthwise conv)
+Caffe_DIR="/ssd2/xyliu/projects/caffe/build/install/share/Caffe"
 
 ## user mode 
 export LD_LIBRARY_PATH="/ssd2/xyliu/projects/caffe/build/install/lib/":$LD_LIBRARY_PATH

@@ -15,7 +15,7 @@ namespace human_pose_estimation {
 
 const size_t PoseEstimator::keypointsNumber = 18;
 
-PoseEstimator::PoseEstimator()
+PoseEstimator::PoseEstimator(map<string, string> params)
     : minJointsNumber(3),
       stride(8),
       pad(cv::Vec4i::all(0)),
@@ -29,8 +29,8 @@ PoseEstimator::PoseEstimator()
 
     Caffe::set_mode(Caffe::GPU);
     /* Load the network. */
-    const string model_file = "/home/xyliu/cpp/caffe/projects/poseEstimation/tinypose.prototxt";
-    const string trained_file = "/home/xyliu/cpp/caffe/projects/poseEstimation/tinypose.caffemodel";
+    const string model_file = params["model_file"];
+    const string trained_file = params["trained_file"];
 
     /* Load the network. */
     net_.reset(new Net<float>(model_file, TEST));
@@ -44,14 +44,11 @@ PoseEstimator::PoseEstimator()
 
 
 ModelOutput PoseEstimator::Predict(const cv::Mat& img){
-
     double t1 = static_cast<double>(cv::getTickCount());
     net_->Forward();
     double t2 = static_cast<double>(cv::getTickCount());
     double inferenceTime = (t2 - t1) / cv::getTickFrequency() * 1000;
     std::cout << "model infrence time is: " << inferenceTime << std::endl;
-
-    // net_->Forward();
 
     Blob<float>* output_heatmaps_ = net_->output_blobs()[0]; //  display output_heatmaps.shape_  is  {1, 19, 32, 43}
     Blob<float>* output_pafs_ = net_->output_blobs()[1]; // shape is  {1, 38, 32, 43}
@@ -97,7 +94,6 @@ std::vector<HumanPose> PoseEstimator::Postprocess(ModelOutput model_result, cons
 
     std::vector<HumanPose> poses = extractPoses(heatMaps, pafs);
     correctCoordinates(poses, heatMaps[0].size(), imageSize);
-    // std::cout << "post_process finish" << std::endl;
     return poses;
 }
 

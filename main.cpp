@@ -5,36 +5,48 @@
 #include <string>
 #include "pose_estimation.hpp"
 #include "render_human_pose.hpp"
-
+#include<map>
 
 using namespace caffe;  // NOLINT(build/namespaces)
 using namespace human_pose_estimation; 
 using std::string;
 
-void video_demo(PoseEstimator pose_estimator);
-void image_demo(PoseEstimator pose_estimator);
+void video_demo(PoseEstimator pose_estimator, map<string, string> params);
+void image_demo(PoseEstimator pose_estimator, map<string, string> params);
 
 int main(int argc, char** argv){
-    PoseEstimator pose_estimator;
-    image_demo(pose_estimator);
-    video_demo(pose_estimator);
+    map<string, string> params;
+    if(argc!=4){
+        params["trained_file"] = "/home/xyliu/cpp/caffe/projects/poseEstimation/tinypose.caffemodel";
+        params["model_file"] = "/home/xyliu/cpp/caffe/projects/poseEstimation/tinypose.prototxt";
+        params["img_test"] = "/home/xyliu/cvToolBox/data/test.png";
+    }
+    else{
+        params["model_file"] = argv[1];
+        params["trained_file"] = argv[2];
+        params["img_test"] = argv[3];
+    }
+
+    PoseEstimator pose_estimator(params);
+    image_demo(pose_estimator, params);
+    video_demo(pose_estimator, params);
     return 0;
 }
 
 
-void image_demo(PoseEstimator pose_estimator){
-    const string file = "/home/xyliu/cvToolBox/data/test.png";
+void image_demo(PoseEstimator pose_estimator, map<string, string> params){
+    const string file = params["img_test"]; 
     cv::Mat img = cv::imread(file, -1);
     std::vector<HumanPose> poses = pose_estimator.poseEstimation(img);
     renderHumanPose(poses, img);
     int delay = 3333;
     cv::imshow("ICV Human Pose Estimation", img);
-    cv::imwrite("saved.jpg", img);
+    // cv::imwrite("saved.jpg", img);
     cv::waitKey(delay);
 }
 
 
-void video_demo(PoseEstimator pose_estimator){
+void video_demo(PoseEstimator pose_estimator, map<string, string> params){
     try{
         cv::VideoCapture cap("/home/xyliu/cvToolBox/data/test.mp4");
 
@@ -76,6 +88,7 @@ void video_demo(PoseEstimator pose_estimator){
                 break;
             }
         } while (cap.read(image));
+    // std::cout << "infrence time is: " << inferenceTime << std::endl;
     }
     catch (const std::exception& error) {
         std::cerr << "[ ERROR ] " << error.what() << std::endl;

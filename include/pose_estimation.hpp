@@ -43,7 +43,7 @@ class PoseEstimator{
         
     public:
         static const size_t keypointsNumber;
-        PoseEstimator();
+        PoseEstimator(map<string, string> params);
         std::vector<HumanPose> poseEstimation(const cv::Mat& img);
 };
 
